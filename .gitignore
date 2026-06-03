@@ -1,0 +1,24 @@
+# Secrets and local config
+*.local.*
+.env
+.env.*
+!*.env.example
+apps/dispatch-web/config.local.js
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+
+# ESP-IDF
+build/
+sdkconfig
+dependencies.lock
+managed_components/
+
+# Editors and OS
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store

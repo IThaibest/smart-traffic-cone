@@ -1,0 +1,9 @@
+idf_component_register(
+    SRCS
+        "src/camera_module.cpp"
+        "src/gps_module.cpp"
+        "src/telemetry_encoder.cpp"
+        "src/ultrasonic_array.cpp"
+    INCLUDE_DIRS
+        "include"
+)

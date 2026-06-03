@@ -1,0 +1,58 @@
+# Smart Traffic Cone Context
+
+This file defines shared project language.
+
+## Language
+
+**Smart Traffic Cone**:
+A traffic cone with ESP32 networking, positioning, distance sensing, camera
+status, and cloud telemetry upload capability.
+_Avoid_: static cone, ordinary road cone, unrelated IoT node
+
+**Edge Cone Node**:
+The ESP32 firmware runtime inside one Smart Traffic Cone. It collects hardware
+snapshots and uploads telemetry to the cloud.
+_Avoid_: cloud node, vehicle client, browser demo
+
+**Telemetry**:
+One structured report from an Edge Cone Node containing location, ultrasonic
+channels, camera status, device health, and raw extension fields.
+_Avoid_: log line, UI event, unstructured sensor dump
+
+**Road Event**:
+A cloud-managed temporary road condition such as construction, accident
+isolation, road closure, low visibility, or abnormal cone boundary.
+_Avoid_: raw alert, single sensor reading
+
+**Alert**:
+A risk or device-health item generated from telemetry or operator input that
+requires review, confirmation, or handling.
+_Avoid_: Road Event, vehicle warning
+
+**Vehicle Warning**:
+A cloud-published warning contract for map or vehicle-side systems after a Road
+Event is fresh enough or operator-confirmed.
+_Avoid_: in-firmware alarm, local buzzer, dispatch task
+
+**Device Health**:
+The freshness and operational state of GPS, ultrasonic channels, camera,
+network, battery, and upload quality.
+_Avoid_: risk level, road event status
+
+**Hardware Module**:
+A reusable firmware module with `setup`, `tick`, `status`, and `deinit`
+operations. Hardware Modules do not own product risk semantics.
+_Avoid_: app workflow, cloud service, one-off pin script
+
+**BSP Configuration**:
+The board and wiring facts that map generic Hardware Modules to concrete pins,
+ports, and shared resources.
+_Avoid_: product behavior, sensor algorithm
+
+## Decisions
+
+- The repository root is a workspace and does not own a single build system.
+- ESP32 firmware is implemented as an ESP-IDF app under `apps/edge-cone-node`.
+- Hardware model names remain unspecified in the first skeleton; interfaces are
+  generic until the team confirms concrete modules.
+- The vehicle side is documented as an interface contract only in this version.

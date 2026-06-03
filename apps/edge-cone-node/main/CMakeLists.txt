@@ -1,0 +1,9 @@
+idf_component_register(
+    SRCS
+        "app_main.cpp"
+        "cone_node_app.cpp"
+    INCLUDE_DIRS
+        "."
+    REQUIRES
+        cone_device
+)

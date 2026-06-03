@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智能路锥道路管理调度中心 Demo</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="主导航">
+      <div class="brand">
+        <div class="brand-mark">IC</div>
+        <div>
+          <strong>智能路锥</strong>
+          <span>道路管理调度中心</span>
+        </div>
+      </div>
+
+      <nav class="nav-list">
+        <button class="nav-item is-active" data-view="overview">
+          <span class="nav-icon">01</span>
+          态势总览
+        </button>
+        <button class="nav-item" data-view="map">
+          <span class="nav-icon">02</span>
+          地图调度
+        </button>
+        <button class="nav-item" data-view="events">
+          <span class="nav-icon">03</span>
+          事件中心
+        </button>
+        <button class="nav-item" data-view="alerts">
+          <span class="nav-icon">04</span>
+          告警中心
+        </button>
+        <button class="nav-item" data-view="devices">
+          <span class="nav-icon">05</span>
+          路锥设备
+        </button>
+        <button class="nav-item" data-view="analysis">
+          <span class="nav-icon">06</span>
+          数据分析
+        </button>
+      </nav>
+
+      <section class="scenario-box">
+        <p class="eyebrow">演示场景</p>
+        <div class="scenario-list" id="scenarioList"></div>
+      </section>
+    </aside>
+
+    <main class="workspace">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Presentation Demo</p>
+          <h1>道路临时风险实时调度</h1>
+        </div>
+        <div class="top-actions">
+          <div class="status-pill">
+            <span class="pulse"></span>
+            <span id="systemClock">--:--:--</span>
+          </div>
+          <button class="icon-button" id="playDemoBtn" title="播放演示流程" aria-label="播放演示流程">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>
+          </button>
+          <button class="text-button secondary" id="locateBtn">当前位置</button>
+          <button class="text-button" id="nextStepBtn">下一步演示</button>
+        </div>
+      </header>
+
+      <section class="hero-strip">
+        <div>
+          <p class="eyebrow">当前场景</p>
+          <h2 id="scenarioTitle">--</h2>
+          <p id="scenarioDesc">--</p>
+        </div>
+        <div class="hero-metrics" id="heroMetrics"></div>
+      </section>
+
+      <section class="view-section is-visible" id="view-overview" data-view-panel="overview">
+        <div class="overview-grid">
+          <section class="map-panel">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">Live Map</p>
+                <h3>智能路锥态势地图</h3>
+              </div>
+              <div class="layer-tools">
+                <button class="tool-button is-active" data-layer="cones">路锥</button>
+                <button class="tool-button is-active" data-layer="events">事件区</button>
+                <button class="tool-button is-active" data-layer="alerts">告警</button>
+              </div>
+            </div>
+            <div class="smart-map" id="smartMap" aria-label="道路调度地图">
+              <div class="map-grid"></div>
+              <div class="road road-main"></div>
+              <div class="road road-ramp"></div>
+              <div class="lane lane-a"></div>
+              <div class="lane lane-b"></div>
+              <div class="map-label label-north">北向主路</div>
+              <div class="map-label label-ramp">匝道入口</div>
+              <div class="event-zone" id="eventZone"></div>
+              <div class="warning-radius" id="warningRadius"></div>
+              <div class="map-legend">
+                <span><i class="dot ok"></i>在线</span>
+                <span><i class="dot mid"></i>关注</span>
+                <span><i class="dot high"></i>高风险</span>
+                <span><i class="dot off"></i>离线</span>
+              </div>
+            </div>
+          </section>
+
+          <aside class="detail-panel">
+            <div class="section-head compact">
+              <div>
+                <p class="eyebrow">Selected</p>
+                <h3 id="selectedTitle">选中对象</h3>
+              </div>
+              <span class="level-badge" id="selectedLevel">--</span>
+            </div>
+            <div class="detail-body" id="detailBody"></div>
+            <div class="action-row">
+              <button class="text-button" id="dispatchBtn">派发处置</button>
+              <button class="text-button secondary" id="syncBtn">同步预警</button>
+              <button class="text-button ghost" id="closeBtn">关闭事件</button>
+            </div>
+          </aside>
+
+          <section class="timeline-panel">
+            <div class="section-head compact">
+              <div>
+                <p class="eyebrow">Event Flow</p>
+                <h3>事件处置时间线</h3>
+              </div>
+            </div>
+            <div class="timeline" id="timeline"></div>
+          </section>
+
+          <section class="alert-panel">
+            <div class="section-head compact">
+              <div>
+                <p class="eyebrow">Alerts</p>
+                <h3>实时告警</h3>
+              </div>
+              <span id="alertCount" class="count-badge">0</span>
+            </div>
+            <div class="alert-list" id="alertList"></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="view-section" id="view-map" data-view-panel="map">
+        <div class="split-layout">
+          <section class="map-panel full">
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">Dispatch Workspace</p>
+                <h3>地图调度工作台</h3>
+              </div>
+              <div class="layer-tools">
+                <button class="tool-button" id="selectAllConesBtn">框选路锥</button>
+                <button class="tool-button" id="generateEventBtn">生成事件</button>
+                <button class="tool-button" id="replayBtn">回放轨迹</button>
+              </div>
+            </div>
+            <div class="smart-map tall" id="largeMap">
+              <div class="map-grid"></div>
+              <div class="road road-main"></div>
+              <div class="road road-ramp"></div>
+              <div class="lane lane-a"></div>
+              <div class="lane lane-b"></div>
+              <div class="map-label label-north">北向主路</div>
+              <div class="map-label label-ramp">匝道入口</div>
+              <div class="event-zone large" id="largeEventZone"></div>
+              <div class="warning-radius large" id="largeWarningRadius"></div>
+            </div>
+          </section>
+          <aside class="side-stack">
+            <section class="info-panel">
+              <p class="eyebrow">Fusion Result</p>
+              <h3>多源数据融合</h3>
+              <div id="fusionList" class="fusion-list"></div>
+            </section>
+            <section class="info-panel">
+              <p class="eyebrow">Recommended Action</p>
+              <h3>推荐调度动作</h3>
+              <div id="recommendations" class="recommend-list"></div>
+            </section>
+          </aside>
+        </div>
+      </section>
+
+      <section class="view-section" id="view-events" data-view-panel="events">
+        <div class="table-panel">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Road Events</p>
+              <h3>事件中心</h3>
+            </div>
+            <button class="text-button" id="newEventBtn">新建事件</button>
+          </div>
+          <div class="event-list" id="eventList"></div>
+        </div>
+      </section>
+
+      <section class="view-section" id="view-alerts" data-view-panel="alerts">
+        <div class="table-panel">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Risk Queue</p>
+              <h3>告警中心</h3>
+            </div>
+            <button class="text-button secondary" id="handleAllBtn">批量确认</button>
+          </div>
+          <div class="alert-table" id="alertTable"></div>
+        </div>
+      </section>
+
+      <section class="view-section" id="view-devices" data-view-panel="devices">
+        <div class="table-panel">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Devices</p>
+              <h3>路锥设备状态</h3>
+            </div>
+            <span class="status-pill small">上报间隔 3s</span>
+          </div>
+          <div class="device-grid" id="deviceGrid"></div>
+        </div>
+      </section>
+
+      <section class="view-section" id="view-analysis" data-view-panel="analysis">
+        <div class="analysis-grid">
+          <section class="chart-panel">
+            <p class="eyebrow">Trend</p>
+            <h3>事件与告警趋势</h3>
+            <div class="bar-chart" id="trendChart"></div>
+          </section>
+          <section class="chart-panel">
+            <p class="eyebrow">Quality</p>
+            <h3>布设质量与同步效果</h3>
+            <div class="quality-list" id="qualityList"></div>
+          </section>
+          <section class="report-panel">
+            <p class="eyebrow">Review Report</p>
+            <h3>复盘报告摘要</h3>
+            <div id="reviewReport" class="report-text"></div>
+          </section>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

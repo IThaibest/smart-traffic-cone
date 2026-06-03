@@ -1,0 +1,35 @@
+{
+  "cone_id": "cone-demo-001",
+  "reported_at": "2026-06-04T10:30:00+08:00",
+  "location": {
+    "longitude": 116.397428,
+    "latitude": 39.90923,
+    "accuracy_m": 2.5,
+    "has_fix": true
+  },
+  "ultrasonic": [
+    { "channel": 0, "distance_m": 18.4, "timed_out": false, "sample_age_ms": 40 },
+    { "channel": 1, "distance_m": 26.1, "timed_out": false, "sample_age_ms": 42 },
+    { "channel": 2, "distance_m": null, "timed_out": true, "sample_age_ms": 1000 },
+    { "channel": 3, "distance_m": 41.7, "timed_out": false, "sample_age_ms": 39 }
+  ],
+  "camera": {
+    "enabled": true,
+    "initialized": true,
+    "frame_available": true,
+    "last_frame_age_ms": 180,
+    "frame_count": 128,
+    "image_url": null
+  },
+  "device": {
+    "gps_status": "normal",
+    "ultrasonic_status": "degraded",
+    "camera_status": "normal",
+    "network_status": "online",
+    "battery_percent": 86.5
+  },
+  "raw_payload": {
+    "firmware_version": "0.1.0",
+    "uptime_ms": 742000
+  }
+}
